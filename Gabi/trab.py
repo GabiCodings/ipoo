@@ -69,17 +69,20 @@ def pesquisar_livro(livro):
 def pesquisa_livro_controller():
     exibir_mensagem("Para voltar digite 'MENU'")
 
-    livros = obter_entrada("Qual Livro Você quer Pesquisar Hoje? ")
+    livro_pesquisa = obter_entrada("Qual Livro Você quer Pesquisar Hoje? ").upper()
 
-    if livros in livros:
-        exibir_mensagem(f"Livro {livros} Encontrado!")
-        exibir_mensagem(list(reversed(livros))) 
+    if livro_pesquisa in livros:
+        posicao = livros.index(livro_pesquisa)
+        exibir_mensagem(f"Livro: {livro_pesquisa} Encontrado! Na posição {posicao + 1}")
+        exibir_mensagem(list(livros)) 
+        return pesquisa_livro_controller()
+    elif livro_pesquisa == 'MENU':
+        return menu_entrada()
+    
     else:
         exibir_mensagem("Livro não encontrado!")
         return pesquisa_livro_controller()
 
-    if livros == 'MENU':
-        return menu_entrada()
 
 
 #Model Excluir Livros
@@ -101,12 +104,14 @@ def excluir_livros_controller():
         livros.remove(livro_excluir)
         exibir_mensagem("Livro Excluido!")
         exibir_mensagem(list(reversed(livros)))
+        return excluir_livros_controller()
+    elif livro_excluir == 'MENU':
+        return menu_entrada()
     else:
         exibir_mensagem("Livro não encontrado.")
         return excluir_livros_controller()
     
-    if livro_excluir == 'MENU':
-        return menu_entrada()
+    
 
 
 #Model Modificar Livro
@@ -122,19 +127,29 @@ def modificar_livro_model(livro):
 def modificar_livro_controller():
     exibir_mensagem("Para voltar digite 'MENU'")
     modificar_livro = obter_entrada("Qual Livro você deseja modificar? ").upper()
-    novo_valor = obter_entrada("Qual o novo titulo do livro? ").upper()
+    
 
-    i = livros.index(modificar_livro)
-    livros[i] = novo_valor
+    if modificar_livro in livros:
 
-    exibir_mensagem(list(reversed(livros)))
-
-    if livros == 'MENU':
+        novo_valor = obter_entrada("Qual o novo titulo do livro? ").upper()
+        i = livros.index(modificar_livro)
+        livros[i] = novo_valor
+        exibir_mensagem(list(livros))
+        return modificar_livro_controller()
+    
+    elif modificar_livro == 'MENU':
         return menu_entrada()
+    else:
+        exibir_mensagem("Livro não encontrado para modificação")
+        return modificar_livro_controller()
+
+    
+
+    
 
 def menu_entrada():
-        exibir_mensagem("1. Adicionar um Livro\n 2. Pesquisar Livro \n 3. Excluir Livro \n 4. Modificar Livro")
-        valor = obter_entrada_int("O que você deseja fazer? ")
+        exibir_mensagem("MENU DE ENTRADA:\n 1. Adicionar um Livro\n 2. Pesquisar Livro \n 3. Excluir Livro \n 4. Modificar Livro")
+        valor = obter_entrada_int("O que você deseja fazer? \n")
 
         if valor == 1:
             cadastrar_livro_controller_v3()
@@ -152,18 +167,5 @@ def menu_entrada():
             exibir_mensagem("Não temos essa funcão ainda...")
             return menu_entrada()
 
-        #match valor:
-
-            #case 1:
-                #cadastrar_livro_controller_v3()
-
-            #case 2:
-                #pesquisa_livro_controller()
-            
-            #case 3:
-                #excluir_livros_controller()
-
-            #case 4:
-                #modificar_livro_controller()
 
 menu_entrada()
